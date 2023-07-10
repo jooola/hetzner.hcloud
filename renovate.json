@@ -10,7 +10,7 @@
   "regexManagers": [
     {
       "fileMatch": ["^scripts/vendor.py$"],
-      "matchStrings": ["HCLOUD_VERSION = \"(?<currentValue>.*?)\""],
+      "matchStrings": ["HCLOUD_VERSION = \"(?<currentValue>.*)\""],
       "datasource": "pypi",
       "depName": "hcloud"
     }
