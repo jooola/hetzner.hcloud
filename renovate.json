@@ -11,8 +11,8 @@
     {
       "fileMatch": ["^scripts/vendor.py$"],
       "matchStrings": ["HCLOUD_VERSION = \"v(?<currentValue>.*)\""],
-      "datasource": "pypi",
-      "depName": "hcloud"
+      "datasourceTemplate": "pypi",
+      "depNameTemplate": "hcloud"
     }
   ]
 }
