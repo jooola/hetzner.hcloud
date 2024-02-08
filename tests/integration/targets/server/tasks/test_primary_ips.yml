@@ -5,12 +5,10 @@
   hetzner.hcloud.server:
     name: "{{ hcloud_server_name }}"
     server_type: cpx11
-    datacenter: fsn1-dc14
     image: ubuntu-22.04
+    datacenter: fsn1-dc14
     ipv4: "{{ test_primary_ipv4_1.hcloud_primary_ip.id }}"
-    ipv6: "{{ test_primary_ipv6.hcloud_primary_ip.id }}"
-    ssh_keys:
-      - "{{ hcloud_ssh_key_name }}"
+    ipv6: "{{ test_primary_ipv6_1.hcloud_primary_ip.id }}"
     state: stopped
   register: result
 - name: Verify create with primary ips
@@ -18,19 +16,47 @@
     that:
       - result is changed
 
+- name: Test create with primary ips idempotency
+  hetzner.hcloud.server:
+    name: "{{ hcloud_server_name }}"
+    server_type: cpx11
+    image: ubuntu-22.04
+    datacenter: fsn1-dc14
+    ipv4: "{{ test_primary_ipv4_1.hcloud_primary_ip.id }}"
+    ipv6: "{{ test_primary_ipv6_1.hcloud_primary_ip.id }}"
+    state: stopped
+  register: result
+- name: Verify create with primary ips idempotency
+  ansible.builtin.assert:
+    that:
+      - result is not changed
+
 - name: Test update with primary ips
   hetzner.hcloud.server:
     name: "{{ hcloud_server_name }}"
     server_type: cpx11
-    datacenter: fsn1-dc14
     image: ubuntu-22.04
+    datacenter: fsn1-dc14
     ipv4: "{{ test_primary_ipv4_2.hcloud_primary_ip.id }}"
     ipv6: ""
-    ssh_keys:
-      - "{{ hcloud_ssh_key_name }}"
     state: stopped
   register: result
 - name: Verify update with primary ips
   ansible.builtin.assert:
     that:
       - result is changed
+
+- name: Test update with primary ips idempotency
+  hetzner.hcloud.server:
+    name: "{{ hcloud_server_name }}"
+    server_type: cpx11
+    image: ubuntu-22.04
+    datacenter: fsn1-dc14
+    ipv4: "{{ test_primary_ipv4_2.hcloud_primary_ip.id }}"
+    ipv6: ""
+    state: stopped
+  register: result
+- name: Verify update with primary ips idempotency
+  ansible.builtin.assert:
+    that:
+      - result is not changed

@@ -23,24 +23,24 @@
 
 - name: Create test_primary_ipv4_1
   hetzner.hcloud.primary_ip:
-    name: "{{ hcloud_primary_ip_name }}v4-1"
+    name: "{{ hcloud_primary_ip_name }}-v4-1"
     type: ipv4
     datacenter: fsn1-dc14
   register: test_primary_ipv4_1
 
 - name: Create test_primary_ipv4_2
   hetzner.hcloud.primary_ip:
-    name: "{{ hcloud_primary_ip_name }}v4-2"
+    name: "{{ hcloud_primary_ip_name }}-v4-2"
     type: ipv4
     datacenter: fsn1-dc14
   register: test_primary_ipv4_2
 
-- name: Create test_primary_ipv6
+- name: Create test_primary_ipv6_1
   hetzner.hcloud.primary_ip:
-    name: "{{ hcloud_primary_ip_name }}v6"
+    name: "{{ hcloud_primary_ip_name }}-v6-1"
     type: ipv6
     datacenter: fsn1-dc14
-  register: test_primary_ipv6
+  register: test_primary_ipv6_1
 
 - name: Create test_firewall_1
   hetzner.hcloud.firewall:
