@@ -17,13 +17,15 @@ author:
 options:
     id:
         description:
-            - The ID of the certificate you want to get.
-            - The module will fail if the provided ID is invalid.
-        type: int
+            - List of certificate IDs you want to get.
+            - The module will fail if a provided ID is invalid.
+        type: list
+        elements: int
     name:
         description:
-            - The name of the certificate you want to get.
-        type: str
+            - List of certificate names you want to get.
+        type: list
+        elements: str
     label_selector:
         description:
             - The label selector for the certificate you want to get.
@@ -34,8 +36,16 @@ extends_documentation_fragment:
 """
 
 EXAMPLES = """
-- name: Gather hcloud certificate infos
+- name: Gather all certificate infos
   hetzner.hcloud.certificate_info:
+  register: output
+- name: Print the gathered infos
+  debug:
+    var: output.hcloud_certificate_info
+
+- name: Gather a hcloud certificate infos
+  hetzner.hcloud.hcloud_certificate_info:
+    id: 1234
   register: output
 - name: Print the gathered infos
   debug:
@@ -138,8 +148,8 @@ class AnsibleHCloudCertificateInfo(AnsibleHCloud):
     def define_module(cls):
         return AnsibleModule(
             argument_spec=dict(
-                id={"type": "int"},
-                name={"type": "str"},
+                id={"type": "list", "elements": "int"},
+                name={"type": "list", "elements": "str"},
                 label_selector={"type": "str"},
                 **super().base_module_arguments(),
             ),

@@ -64,13 +64,15 @@ hcloud_iso_info:
         id:
             description: ID of the ISO
             returned: always
-            type: int
-            sample: 22110
+            type: list
+            elements: int
+            sample: [22110]
         name:
             description: Unique identifier of the ISO. Only set for public ISOs
             returned: always
-            type: str
-            sample: debian-12.0.0-amd64-netinst.iso
+            type: list
+            elements: str
+            sample: [debian-12.0.0-amd64-netinst.iso]
         description:
             description: Description of the ISO
             returned: always
@@ -167,9 +169,15 @@ class AnsibleHCloudIsoInfo(AnsibleHCloud):
     def get_iso_infos(self):
         try:
             if self.module.params.get("id") is not None:
-                self.hcloud_iso_info = [self.client.isos.get_by_id(self.module.params.get("id"))]
+                self.hcloud_iso_info = self._client_get_one_or_many(
+                    self.client.isos.get_by_id,
+                    self.module.params.get("id"),
+                )
             elif self.module.params.get("name") is not None:
-                self.hcloud_iso_info = [self.client.isos.get_by_name(self.module.params.get("name"))]
+                self.hcloud_iso_info = self._client_get_one_or_many(
+                    self.client.isos.get_by_name,
+                    self.module.params.get("name"),
+                )
             else:
                 self.hcloud_iso_info = self.client.isos.get_all(
                     architecture=self.module.params.get("architecture"),
@@ -183,8 +191,8 @@ class AnsibleHCloudIsoInfo(AnsibleHCloud):
     def define_module(cls):
         return AnsibleModule(
             argument_spec=dict(
-                id={"type": "int"},
-                name={"type": "str"},
+                id={"type": "list", "elements": "int"},
+                name={"type": "list", "elements": "str"},
                 architecture={"type": "str", "choices": ["x86", "arm"]},
                 include_architecture_wildcard={"type": "bool"},
                 **super().base_module_arguments(),

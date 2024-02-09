@@ -6,7 +6,7 @@
 from __future__ import annotations
 
 import traceback
-from typing import Any, NoReturn
+from typing import Any, Callable, List, NoReturn, Union
 
 from ansible.module_utils.basic import AnsibleModule as AnsibleModuleBase, env_fallback
 from ansible.module_utils.common.text.converters import to_native
@@ -90,6 +90,17 @@ class AnsibleHCloud:
             return client_get_by_name_or_id(self.client, resource, param)
         except ClientException as exception:
             self.module.fail_json(msg=to_native(exception))
+
+    def _client_get_one_or_many(self, query: Callable, items: str | int | list[str | int]):
+        """
+        Get one or a many resources.
+
+        :param query: API call used to query a single item.
+        :param items: Single or list of argument for the query.
+        """
+        if isinstance(items, (str, int)):
+            items = [items]
+        return [query(item) for item in items]
 
     def _mark_as_changed(self) -> None:
         self.result["changed"] = True
