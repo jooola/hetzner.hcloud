@@ -104,11 +104,6 @@ hcloud_load_balancer:
             returned: always
             type: str
             sample: my-Load-Balancer
-        status:
-            description: Status of the Load Balancer
-            returned: always
-            type: str
-            sample: running
         load_balancer_type:
             description: Name of the Load Balancer type of the Load Balancer
             returned: always
@@ -184,7 +179,7 @@ class AnsibleHCloudLoadBalancer(AnsibleHCloud):
             "location": to_native(self.hcloud_load_balancer.location.name),
             "labels": self.hcloud_load_balancer.labels,
             "delete_protection": self.hcloud_load_balancer.protection["delete"],
-            "disable_public_interface": False if self.hcloud_load_balancer.public_net.enabled else True,
+            "disable_public_interface": not self.hcloud_load_balancer.public_net.enabled,
         }
 
     def _get_load_balancer(self):
